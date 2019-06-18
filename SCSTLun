@@ -247,6 +247,7 @@ SCSTLun_start() {
   echo 1 > "${ISCSI_BASE}/${OCF_RESKEY_target_iqn}/enabled"
   ocf_log info "Started lun ${OCF_RESKEY_lun} on target ${OCF_RESKEY_target_iqn}"
   echo 32 > "${ISCSI_BASE}/${OCF_RESKEY_target_iqn}/luns/${OCF_RESKEY_lun}/device/threads_num"
+  echo 1024 > "${ISCSI_BASE}/${OCF_RESKEY_target_iqn}/luns/${OCF_RESKEY_lun}/device/max_tgt_dev_commands"
   #Debugging purpose
   #scstadmin -write_config /tmp/scst.conf.start
 #       scstadmin -write_config /etc/scst.conf >/dev/null 2>&1
