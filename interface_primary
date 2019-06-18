@@ -1,0 +1,42 @@
+# ifupdown has been replaced by netplan(5) on this system.  See
+# /etc/netplan for current configuration.
+# To re-enable ifupdown on this system, you can run:
+#    sudo apt install ifupdown
+auto lo eno1 eno3 eno4 enp24s0 enp24s0d1 enp134s0 enp134s0d1
+iface lo inet loopback
+# possible to create bond of eno1 and eno2 to have two paths available
+iface eno1 inet static
+   address x.x.x.x/xx #your external ip for maintenance/ipmi_fence
+   gateway x.x.x.x #your gateway
+# for heartbeat
+iface eno3 inet static
+   mtu 9000
+   address 10.10.253.1/24
+# intern node management address
+iface eno4 inet static
+   mtu 9000
+   address 10.10.254.1/24
+# CX3-Pro#1 Port 1 this address is only there for bringing the interface up correctly on boot
+# Mellanox suggest in using mtu size of 4200 for iSER
+iface enp24s0 inet static
+   mtu 4200
+   address 10.10.1.11/24
+   post-up ethtool -A enp24s0 rx on tx on
+# CX3-Pro#1 Port 2 this address is only there for bringing the interface up correctly on boot
+# Mellanox suggest in using mtu size of 4200 for iSER
+iface enp24s0d1 inet static
+   mtu 4200
+   address 10.10.1.12/24
+   post-up ethtool -A enp24s0d1 rx on tx on
+# CX3-Pro#2 Port 1 this address is only there for bringing the interface up correctly on boot
+# Mellanox suggest in using mtu size of 4200 for iSER
+iface enp134s0 inet static
+   mtu 4200
+   address 10.10.2.11/24
+   post-up ethtool -A enp134s0 rx on tx on
+# CX3-Pro#2 Port 2 this address is only there for bringing the interface up correctly on boot
+# Mellanox suggest in using mtu size of 4200 for iSER
+iface enp134s0d1 inet static
+   mtu 4200
+   address 10.10.2.12/24
+   post-up ethtool -A enp134s0d1 rx on tx on
