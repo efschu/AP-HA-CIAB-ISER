@@ -68,7 +68,7 @@
      <group id="group-luns">
        <primitive class="ocf" id="lun1" provider="heartbeat" type="SCSTLun">
          <instance_attributes id="lun1-instance_attributes">
-           <nvpair id="lun1-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=0;nv_cache=0;write_through=0"/>
+           <nvpair id="lun1-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=1;nv_cache=0;write_through=0"/>
            <nvpair id="lun1-instance_attributes-device_name" name="device_name" value="ZFSVDISK-LUN1"/>
            <nvpair id="lun1-instance_attributes-handler" name="handler" value="vdisk_blockio"/>
            <nvpair id="lun1-instance_attributes-lun" name="lun" value="1"/>
@@ -86,7 +86,7 @@
        </primitive>
        <primitive class="ocf" id="lun2" provider="heartbeat" type="SCSTLun">
          <instance_attributes id="lun2-instance_attributes">
-           <nvpair id="lun2-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=0;nv_cache=0;write_through=0"/>
+           <nvpair id="lun2-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=1;nv_cache=0;write_through=0"/>
            <nvpair id="lun2-instance_attributes-device_name" name="device_name" value="ZFSVDISK-LUN2"/>
            <nvpair id="lun2-instance_attributes-handler" name="handler" value="vdisk_blockio"/>
            <nvpair id="lun2-instance_attributes-lun" name="lun" value="2"/>
@@ -104,7 +104,7 @@
        </primitive>
        <primitive class="ocf" id="lun3" provider="heartbeat" type="SCSTLun">
          <instance_attributes id="lun3-instance_attributes">
-           <nvpair id="lun3-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=0;nv_cache=0;write_through=0"/>
+           <nvpair id="lun3-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=1;nv_cache=0;write_through=0"/>
            <nvpair id="lun3-instance_attributes-device_name" name="device_name" value="ZFSVDISK-LUN3"/>
            <nvpair id="lun3-instance_attributes-handler" name="handler" value="vdisk_blockio"/>
            <nvpair id="lun3-instance_attributes-lun" name="lun" value="3"/>
@@ -122,7 +122,7 @@
        </primitive>
        <primitive class="ocf" id="lun4" provider="heartbeat" type="SCSTLun">
          <instance_attributes id="lun4-instance_attributes">
-           <nvpair id="lun4-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=0;nv_cache=0;write_through=0"/>
+           <nvpair id="lun4-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=1;nv_cache=0;write_through=0"/>
            <nvpair id="lun4-instance_attributes-device_name" name="device_name" value="ZFSVDISK-LUN4"/>
            <nvpair id="lun4-instance_attributes-handler" name="handler" value="vdisk_blockio"/>
            <nvpair id="lun4-instance_attributes-lun" name="lun" value="4"/>
