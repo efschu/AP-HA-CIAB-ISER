@@ -1,0 +1,92 @@
+#!/bin/sh
+#
+# License:      GNU General Public License (GPL)
+# Support:      schickdahin@localhost
+# Written by:   Matthias Ehrenfeuchter
+#
+#       This script starts scst by init.d script
+#       It will load default /etc/scst.conf
+#
+#       usage: $0 {start|stop|status|monitor|validate-all|meta-data}
+#
+#######################################################################
+# Initialization:
+: ${OCF_FUNCTIONS_DIR=${OCF_ROOT}/lib/heartbeat}
+. ${OCF_FUNCTIONS_DIR}/ocf-shellfuncs
+: ${HELPERS_DIR=${OCF_ROOT}/lib/heartbeat/helpers}
+# Set the variable below to '1' to enable logging.
+# This is useful to determine how long these operations take on your system.
+# DEBUG=0
+DEBUGLOG="/var/log/scst_init.d_debug.log"
+USAGE="usage: $0 {start|stop|status|monitor|validate-all|meta-data}";
+#######################################################################
+debug_log () {
+ if [ "$DEBUG" -eq 1 ]; then
+  echo "`date`:${OCF_RESKEY_pool}:" $@ >> "$DEBUGLOG"
+ fi
+}
+meta_data() {
+  cat <<END
+<?xml version="1.0"?>
+<!DOCTYPE resource-agent SYSTEM "ra-api-1.dtd">
+<resource-agent name="scst_init">
+<version>1.0</version>
+<longdesc lang="en">
+This script starts scst by init.d script
+It will load default /etc/scst.conf
+</longdesc>
+<shortdesc lang="en">Starts scst by init.d script</shortdesc>
+<actions>
+<action name="start"   timeout="60s" />
+<action name="stop"    timeout="60s" />
+<action name="monitor" depth="0"  timeout="30s" interval="5s" />
+<action name="validate-all"  timeout="30s" />
+<action name="meta-data"  timeout="5s" />
+</actions>
+</resource-agent>
+END
+  exit $OCF_SUCCESS
+}
+scst_status () {
+  /etc/init.d/scst status |grep "active (running)" > /dev/null
+}
+scst_start_init () {
+  /usr/sbin/iscsi-scstd > /dev/null
+  /etc/init.d/scst restart > /dev/null
+  /usr/sbin/iscsi-scstd > /dev/null
+  return $OCF_SUCCESS
+}
+scst_start () {
+  if scst_status
+  then
+    return $OCF_SUCCESS
+  else
+    scst_start_init
+  fi
+}
+scst_stop () {
+  /etc/init.d/scst stop > /dev/null
+  return $OCF_SUCCESS
+}
+scst_monitor () {
+  if scst_status
+  then
+    return $OCF_SUCCESS
+  else
+    return $OCF_NOT_RUNNING
+  fi
+}
+usage () {
+ echo $USAGE >&2
+ return $1
+}
+case $1 in
+ meta-data)          meta_data;;
+ start)              scst_start;;
+ stop)               scst_stop;;
+ status|monitor)     scst_monitor;;
+ validate-all)       return $OCF_SUCCESS;;
+ usage)              usage $OCF_SUCCESS;;
+ *)                  usage $OCF_ERR_UNIMPLEMENTED;;
+esac
+exit $?
