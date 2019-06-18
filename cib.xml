@@ -1,0 +1,209 @@
+<cib crm_feature_set="3.0.14" validate-with="pacemaker-2.10" epoch="695" num_updates="0" admin_epoch="0" cib-last-written="Fri Jun 14 13:09:16 2019" update-origin="san-master" update-client="cibadmin" update-user="hacluster" have-quorum="1" dc-uuid="1">
+ <configuration>
+   <crm_config>
+     <cluster_property_set id="cib-bootstrap-options">
+       <nvpair id="cib-bootstrap-options-have-watchdog" name="have-watchdog" value="false"/>
+       <nvpair id="cib-bootstrap-options-dc-version" name="dc-version" value="1.1.18-2b07d5c5a9"/>
+       <nvpair id="cib-bootstrap-options-cluster-infrastructure" name="cluster-infrastructure" value="corosync"/>
+       <nvpair id="cib-bootstrap-options-cluster-name" name="cluster-name" value="iser-san"/>
+       <nvpair id="cib-bootstrap-options-no-quorum-policy" name="no-quorum-policy" value="ignore"/>
+       <nvpair id="cib-bootstrap-options-stonith-enabled" name="stonith-enabled" value="true"/>
+       <nvpair id="cib-bootstrap-options-last-lrm-refresh" name="last-lrm-refresh" value="1560254830"/>
+       <nvpair id="cib-bootstrap-options-cluster-recheck-interval" name="cluster-recheck-interval" value="15s"/>
+     </cluster_property_set>
+   </crm_config>
+   <nodes>
+     <node id="1" uname="san-master"/>
+     <node id="2" uname="san-slave"/>
+   </nodes>
+   <resources>
+     <group id="group-ips">
+       <primitive class="ocf" id="enp24s0-ip" provider="heartbeat" type="IPaddr2">
+         <instance_attributes id="enp24s0-ip-instance_attributes">
+           <nvpair id="enp24s0-ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="24"/>
+           <nvpair id="enp24s0-ip-instance_attributes-ip" name="ip" value="10.10.101.11"/>
+           <nvpair id="enp24s0-ip-instance_attributes-nic" name="nic" value="enp24s0"/>
+         </instance_attributes>
+         <operations>
+           <op id="enp24s0-ip-monitor-interval-10s" interval="10s" name="monitor" timeout="20s"/>
+           <op id="enp24s0-ip-start-interval-0s" interval="0s" name="start" timeout="20s"/>
+           <op id="enp24s0-ip-stop-interval-0s" interval="0s" name="stop" timeout="20s"/>
+         </operations>
+         <meta_attributes id="enp24s0-ip-meta_attributes">
+           <nvpair id="enp24s0-ip-meta_attributes-failure-timeout" name="failure-timeout" value="15s"/>
+         </meta_attributes>
+       </primitive>
+       <primitive class="ocf" id="enp134s0-ip" provider="heartbeat" type="IPaddr2">
+         <instance_attributes id="enp134s0-ip-instance_attributes">
+           <nvpair id="enp134s0-ip-instance_attributes-cidr_netmask" name="cidr_netmask" value="24"/>
+           <nvpair id="enp134s0-ip-instance_attributes-ip" name="ip" value="10.10.103.11"/>
+           <nvpair id="enp134s0-ip-instance_attributes-nic" name="nic" value="enp134s0"/>
+         </instance_attributes>
+         <operations>
+           <op id="enp134s0-ip-monitor-interval-10s" interval="10s" name="monitor" timeout="20s"/>
+           <op id="enp134s0-ip-start-interval-0s" interval="0s" name="start" timeout="20s"/>
+           <op id="enp134s0-ip-stop-interval-0s" interval="0s" name="stop" timeout="20s"/>
+         </operations>
+         <meta_attributes id="enp134s0-ip-meta_attributes">
+           <nvpair id="enp134s0-ip-meta_attributes-failure-timeout" name="failure-timeout" value="15s"/>
+         </meta_attributes>
+       </primitive>
+     </group>
+     <group id="group-zfs">
+       <primitive class="ocf" id="RAIDZ" provider="heartbeat" type="ZFS">
+         <instance_attributes id="RAIDZ-instance_attributes">
+           <nvpair id="RAIDZ-instance_attributes-importargs" name="importargs" value="-d /dev/disk/by-id/"/>
+           <nvpair id="RAIDZ-instance_attributes-pool" name="pool" value="RAIDZ"/>
+         </instance_attributes>
+         <operations>
+           <op id="RAIDZ-monitor-interval-5s" interval="5s" name="monitor" timeout="30s"/>
+           <op id="RAIDZ-start-interval-0s" interval="0s" name="start" timeout="90"/>
+           <op id="RAIDZ-stop-interval-0s" interval="0s" name="stop" timeout="90"/>
+         </operations>
+         <meta_attributes id="RAIDZ-meta_attributes">
+           <nvpair id="RAIDZ-meta_attributes-failure-timeout" name="failure-timeout" value="15s"/>
+         </meta_attributes>
+       </primitive>
+     </group>
+     <group id="group-luns">
+       <primitive class="ocf" id="lun1" provider="heartbeat" type="SCSTLun">
+         <instance_attributes id="lun1-instance_attributes">
+           <nvpair id="lun1-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=0;nv_cache=0;write_through=0"/>
+           <nvpair id="lun1-instance_attributes-device_name" name="device_name" value="ZFSVDISK-LUN1"/>
+           <nvpair id="lun1-instance_attributes-handler" name="handler" value="vdisk_blockio"/>
+           <nvpair id="lun1-instance_attributes-lun" name="lun" value="1"/>
+           <nvpair id="lun1-instance_attributes-path" name="path" value="/dev/zvol/RAIDZ/vol-lun1"/>
+           <nvpair id="lun1-instance_attributes-target_iqn" name="target_iqn" value="iqn.2019-05.com.ubuntu:iSer.SAN"/>
+         </instance_attributes>
+         <operations>
+           <op id="lun1-monitor-interval-10" interval="10" name="monitor" timeout="10"/>
+           <op id="lun1-start-interval-0s" interval="0s" name="start" timeout="15"/>
+           <op id="lun1-stop-interval-0s" interval="0s" name="stop" timeout="180"/>
+         </operations>
+         <meta_attributes id="lun1-meta_attributes">
+           <nvpair id="lun1-meta_attributes-failure-timeout" name="failure-timeout" value="15s"/>
+         </meta_attributes>
+       </primitive>
+       <primitive class="ocf" id="lun2" provider="heartbeat" type="SCSTLun">
+         <instance_attributes id="lun2-instance_attributes">
+           <nvpair id="lun2-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=0;nv_cache=0;write_through=0"/>
+           <nvpair id="lun2-instance_attributes-device_name" name="device_name" value="ZFSVDISK-LUN2"/>
+           <nvpair id="lun2-instance_attributes-handler" name="handler" value="vdisk_blockio"/>
+           <nvpair id="lun2-instance_attributes-lun" name="lun" value="2"/>
+           <nvpair id="lun2-instance_attributes-path" name="path" value="/dev/zvol/RAIDZ/vol-lun2"/>
+           <nvpair id="lun2-instance_attributes-target_iqn" name="target_iqn" value="iqn.2019-05.com.ubuntu:iSer.SAN"/>
+         </instance_attributes>
+         <operations>
+           <op id="lun2-monitor-interval-10" interval="10" name="monitor" timeout="10"/>
+           <op id="lun2-start-interval-0s" interval="0s" name="start" timeout="15"/>
+           <op id="lun2-stop-interval-0s" interval="0s" name="stop" timeout="180"/>
+         </operations>
+         <meta_attributes id="lun2-meta_attributes">
+           <nvpair id="lun2-meta_attributes-failure-timeout" name="failure-timeout" value="15s"/>
+         </meta_attributes>
+       </primitive>
+       <primitive class="ocf" id="lun3" provider="heartbeat" type="SCSTLun">
+         <instance_attributes id="lun3-instance_attributes">
+           <nvpair id="lun3-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=0;nv_cache=0;write_through=0"/>
+           <nvpair id="lun3-instance_attributes-device_name" name="device_name" value="ZFSVDISK-LUN3"/>
+           <nvpair id="lun3-instance_attributes-handler" name="handler" value="vdisk_blockio"/>
+           <nvpair id="lun3-instance_attributes-lun" name="lun" value="3"/>
+           <nvpair id="lun3-instance_attributes-path" name="path" value="/dev/zvol/RAIDZ/vol-lun3"/>
+           <nvpair id="lun3-instance_attributes-target_iqn" name="target_iqn" value="iqn.2019-05.com.ubuntu:iSer.SAN"/>
+         </instance_attributes>
+         <operations>
+           <op id="lun3-monitor-interval-10" interval="10" name="monitor" timeout="10"/>
+           <op id="lun3-start-interval-0s" interval="0s" name="start" timeout="15"/>
+           <op id="lun3-stop-interval-0s" interval="0s" name="stop" timeout="180"/>
+         </operations>
+         <meta_attributes id="lun3-meta_attributes">
+           <nvpair id="lun3-meta_attributes-failure-timeout" name="failure-timeout" value="15s"/>
+         </meta_attributes>
+       </primitive>
+       <primitive class="ocf" id="lun4" provider="heartbeat" type="SCSTLun">
+         <instance_attributes id="lun4-instance_attributes">
+           <nvpair id="lun4-instance_attributes-additional_parameters" name="additional_parameters" value="rotational=0;thin_provisioned=0;nv_cache=0;write_through=0"/>
+           <nvpair id="lun4-instance_attributes-device_name" name="device_name" value="ZFSVDISK-LUN4"/>
+           <nvpair id="lun4-instance_attributes-handler" name="handler" value="vdisk_blockio"/>
+           <nvpair id="lun4-instance_attributes-lun" name="lun" value="4"/>
+           <nvpair id="lun4-instance_attributes-path" name="path" value="/dev/zvol/RAIDZ/vol-lun4"/>
+           <nvpair id="lun4-instance_attributes-target_iqn" name="target_iqn" value="iqn.2019-05.com.ubuntu:iSer.SAN"/>
+         </instance_attributes>
+         <operations>
+           <op id="lun4-monitor-interval-10" interval="10" name="monitor" timeout="10"/>
+           <op id="lun4-start-interval-0s" interval="0s" name="start" timeout="15"/>
+           <op id="lun4-stop-interval-0s" interval="0s" name="stop" timeout="180"/>
+         </operations>
+         <meta_attributes id="lun4-meta_attributes">
+           <nvpair id="lun4-meta_attributes-failure-timeout" name="failure-timeout" value="15s"/>
+         </meta_attributes>
+       </primitive>
+     </group>
+     <primitive class="ocf" id="scst" provider="heartbeat" type="scst_init">
+       <operations>
+         <op id="scst-monitor-interval-5s" interval="5s" name="monitor" timeout="30s"/>
+         <op id="scst-start-interval-0s" interval="0s" name="start" timeout="60s"/>
+         <op id="scst-stop-interval-0s" interval="0s" name="stop" timeout="60s"/>
+       </operations>
+       <meta_attributes id="scst-meta_attributes">
+         <nvpair id="scst-meta_attributes-failure-timeout" name="failure-timeout" value="15s"/>
+       </meta_attributes>
+     </primitive>
+     <primitive class="stonith" id="fence_ipmi_san-master" type="fence_ipmilan">
+       <instance_attributes id="fence_ipmi_san-master-instance_attributes">
+         <nvpair id="fence_ipmi_san-master-instance_attributes-delay" name="delay" value="15"/>
+         <nvpair id="fence_ipmi_san-master-instance_attributes-ipaddr" name="ipaddr" value="192.168.22.12"/>
+         <nvpair id="fence_ipmi_san-master-instance_attributes-lanplus" name="lanplus" value="true"/>
+         <nvpair id="fence_ipmi_san-master-instance_attributes-login" name="login" value="ADMIN"/>
+         <nvpair id="fence_ipmi_san-master-instance_attributes-passwd" name="passwd" value="ADMIN"/>
+         <nvpair id="fence_ipmi_san-master-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="san-master"/>
+         <nvpair id="fence_ipmi_san-master-instance_attributes-power_wait" name="power_wait" value="4"/>
+       </instance_attributes>
+       <operations>
+         <op id="fence_ipmi_san-master-monitor-interval-30s" interval="30s" name="monitor"/>
+       </operations>
+     </primitive>
+     <primitive class="stonith" id="fence_ipmi_san-slave" type="fence_ipmilan">
+       <instance_attributes id="fence_ipmi_san-slave-instance_attributes">
+         <nvpair id="fence_ipmi_san-slave-instance_attributes-ipaddr" name="ipaddr" value="192.168.22.13"/>
+         <nvpair id="fence_ipmi_san-slave-instance_attributes-lanplus" name="lanplus" value="true"/>
+         <nvpair id="fence_ipmi_san-slave-instance_attributes-login" name="login" value="ADMIN"/>
+         <nvpair id="fence_ipmi_san-slave-instance_attributes-passwd" name="passwd" value="ADMIN"/>
+         <nvpair id="fence_ipmi_san-slave-instance_attributes-pcmk_host_list" name="pcmk_host_list" value="san-slave"/>
+         <nvpair id="fence_ipmi_san-slave-instance_attributes-power_wait" name="power_wait" value="4"/>
+       </instance_attributes>
+       <operations>
+         <op id="fence_ipmi_san-slave-monitor-interval-30s" interval="30s" name="monitor"/>
+       </operations>
+     </primitive>
+   </resources>
+   <constraints>
+     <rsc_order first="scst" first-action="stop" id="order-scst-group-zfs-mandatory" symmetrical="true" then="group-zfs" then-action="stop"/>
+     <rsc_order first="group-zfs" first-action="start" id="order-group-zfs-scst-mandatory" symmetrical="true" then="scst" then-action="start"/>
+     <rsc_order first="scst" first-action="start" id="order-scst-group-luns-mandatory" symmetrical="true" then="group-luns" then-action="start"/>
+     <rsc_order first="group-luns" first-action="stop" id="order-group-luns-scst-mandatory" symmetrical="true" then="scst" then-action="stop"/>
+     <rsc_colocation id="colocation-group-luns-group-ips-INFINITY" rsc="group-luns" score="INFINITY" with-rsc="group-ips"/>
+     <rsc_colocation id="colocation-group-luns-scst-INFINITY" rsc="group-luns" score="INFINITY" with-rsc="scst"/>
+     <rsc_colocation id="colocation-group-luns-group-zfs-INFINITY" rsc="group-luns" score="INFINITY" with-rsc="group-zfs"/>
+     <rsc_colocation id="colocation-group-ips-group-zfs-INFINITY" rsc="group-ips" score="INFINITY" with-rsc="group-zfs"/>
+     <rsc_colocation id="colocation-group-ips-scst-INFINITY" rsc="group-ips" score="INFINITY" with-rsc="scst"/>
+     <rsc_colocation id="colocation-group-zfs-scst-INFINITY" rsc="group-zfs" score="INFINITY" with-rsc="scst"/>
+     <rsc_order first="group-ips" first-action="start" id="order-group-ips-group-zfs-mandatory" symmetrical="true" then="group-zfs" then-action="start"/>
+     <rsc_order first="group-zfs" first-action="stop" id="order-group-zfs-group-ips-mandatory" symmetrical="true" then="group-ips" then-action="stop"/>
+     <rsc_location id="lc_ipmi_san-master" node="san-master" rsc="fence_ipmi_san-master" score="-INFINITY"/>
+     <rsc_location id="lc_ipmi_san-slave" node="san-slave" rsc="fence_ipmi_san-slave" score="-INFINITY"/>
+     <rsc_location id="location-group-ips-san-master-10" node="san-master" rsc="group-ips" score="10"/>
+     <rsc_location id="location-group-luns-san-master-10" node="san-master" rsc="group-luns" score="10"/>
+     <rsc_location id="location-group-zfs-san-master-10" node="san-master" rsc="group-zfs" score="10"/>
+     <rsc_location id="location-scst-san-master-10" node="san-master" rsc="scst" score="10"/>
+     <rsc_location id="location-group-ips-san-slave-5" node="san-slave" rsc="group-ips" score="5"/>
+     <rsc_location id="location-group-luns-san-slave-5" node="san-slave" rsc="group-luns" score="5"/>
+     <rsc_location id="location-group-zfs-san-slave-5" node="san-slave" rsc="group-zfs" score="5"/>
+     <rsc_location id="location-scst-san-slave-5" node="san-slave" rsc="scst" score="5"/>
+   </constraints>
+   <fencing-topology>
+     <fencing-level devices="fence_ipmi_san-master" id="fl-san-master-1" index="1" target="san-master"/>
+     <fencing-level devices="fence_ipmi_san-slave" id="fl-san-slave-1" index="1" target="san-slave"/>
+   </fencing-topology>
+ </configuration>
+</cib>
