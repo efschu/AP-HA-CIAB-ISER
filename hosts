@@ -1,0 +1,4 @@
+10.10.253.1     san-master-heartbeat
+10.10.253.2     san-slave-heartbeat
+10.10.254.1     san-master
+10.10.254.2     san-slave
