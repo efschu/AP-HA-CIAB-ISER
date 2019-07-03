@@ -208,7 +208,7 @@ SCSTLun_start() {
     params="${params} ${OCF_RESKEY_additional_parameters}"
   fi
   ocf_log info "Disabling target ${OCF_RESKEY_target_iqn}"
-  echo 0 > "${ISCSI_BASE}/${OCF_RESKEY_target_iqn}/enabled"
+  #echo 0 > "${ISCSI_BASE}/${OCF_RESKEY_target_iqn}/enabled"
   ocf_log info "Starting lun ${OCF_RESKEY_lun} on target ${OCF_RESKEY_target_iqn}"
   # Load Handler Modules
   l_start_handler #|| exit $OCF_ERR_GENERIC
